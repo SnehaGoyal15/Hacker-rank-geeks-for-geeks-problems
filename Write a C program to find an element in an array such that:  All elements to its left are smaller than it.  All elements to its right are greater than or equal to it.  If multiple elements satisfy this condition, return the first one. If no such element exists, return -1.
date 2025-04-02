@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+int find(int a[], int n)
+{
+    int left = a[0], i, j, v;
+    for (i = 1; i < n - 1; i++)
+    {
+        if (a[i] > left)
+        {
+            v = 1;
+            for (j = i + 1; j < n; j++)
+            {
+                if (a[j] < a[i])
+                {
+                    v = 0;
+                    break;
+                }
+            }
+            if (v)
+            {
+                return a[i]; // Found the required element
+            }
+        }
+        left = a[i]; // Always update left
+    }
+    return -1; // If no such element found
+}
+
+int main()
+{
+    int t, n, i;
+    printf("Enter number of test cases: ");
+    scanf("%d", &t);
+
+    while (t--)
+    {
+        printf("Enter size of array: ");
+        scanf("%d", &n);
+        int a[n];
+        printf("Enter array: ");
+        for (i = 0; i < n; i++)
+            scanf("%d", &a[i]);
+
+        int r = find(a, n);
+        if (r != -1)
+            printf("Element is %d\n", r);
+        else
+            printf("No such element found\n");
+    }
+    return 0;
+}
