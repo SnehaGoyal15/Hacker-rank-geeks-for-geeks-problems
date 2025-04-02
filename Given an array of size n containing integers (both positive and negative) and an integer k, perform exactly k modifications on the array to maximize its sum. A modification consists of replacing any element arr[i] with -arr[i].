@@ -1,0 +1,129 @@
+Given an array of size n and a number k. We must modify array K a number of times. Here modify array means in each operation we can replace any array element arr[i] by -arr[i]. We need to perform this operation in such a way that after K operations, the sum of the array must be maximum?
+
+Examples : 
+
+
+Input : arr[] = {-2, 0, 5, -1, 2}, K = 4
+Output: 10
+Explanation:
+1. Replace (-2) by -(-2), array becomes {2, 0, 5, -1, 2}
+2. Replace (-1) by -(-1), array becomes {2, 0, 5, 1, 2}
+3. Replace (0) by -(0), array becomes {2, 0, 5, 1, 2}
+4. Replace (0) by -(0), array becomes {2, 0, 5, 1, 2}
+
+#include <stdio.h>
+
+// Function to merge two halves
+void merge(int arr[], int left, int mid, int right) {
+    int i = left, j = mid + 1, k = 0;
+    int temp[right - left + 1];
+
+    while (i <= mid && j <= right) {
+        if (arr[i] <= arr[j])  // Sorting in ascending order
+            temp[k++] = arr[i++];
+        else
+            temp[k++] = arr[j++];
+    }
+
+    while (i <= mid)
+        temp[k++] = arr[i++];
+    while (j <= right)
+        temp[k++] = arr[j++];
+
+    for (i = left, k = 0; i <= right; i++, k++)
+        arr[i] = temp[k];
+}
+
+// Merge Sort function
+void mergeSort(int arr[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+
+// Function to maximize the sum
+int maximizeSum(int arr[], int n, int k) {
+    mergeSort(arr, 0, n - 1); // Sort the array in ascending order
+
+    for (int i = 0; i < n && k > 0; i++) {
+        if (arr[i] < 0) {
+            arr[i] = -arr[i]; // Flip negative to positive
+            k--;
+        }
+    }
+
+    mergeSort(arr, 0, n - 1); // Re-sort to find the smallest element
+
+    if (k % 2 != 0) // If K is odd, flip the smallest element
+        arr[0] = -arr[0];
+
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+        sum += arr[i];
+
+    return sum;
+}
+
+int main() {
+    int n, k;
+    scanf("%d %d", &n, &k);
+    int arr[n];
+
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    printf("%d\n", maximizeSum(arr, n, k));
+    return 0;
+}
+
+
+OR
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Comparison function for sorting in ascending order
+int compare(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
+}
+
+// Function to maximize the sum after k operations
+int maximizeSum(int arr[], int n, int k) {
+    qsort(arr, n, sizeof(int), compare); // Sort in ascending order
+
+    // Flip negative numbers first
+    for (int i = 0; i < n && k > 0; i++) {
+        if (arr[i] < 0) {
+            arr[i] = -arr[i];
+            k--;
+        }
+    }
+
+    // Sort again to find the smallest element
+    qsort(arr, n, sizeof(int), compare);
+
+    // If K is odd, flip the smallest element
+    if (k % 2 != 0)
+        arr[0] = -arr[0];
+
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+        sum += arr[i];
+
+    return sum;
+}
+
+int main() {
+    int n, k;
+    scanf("%d %d", &n, &k);
+    int arr[n];
+
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    printf("%d\n", maximizeSum(arr, n, k));
+    return 0;
+}
