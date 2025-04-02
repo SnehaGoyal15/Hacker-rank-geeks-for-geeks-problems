@@ -1,0 +1,49 @@
+av#include <stdio.h>
+
+void countingSort(int a[], int n) {
+    int max = a[0], i;
+    
+    // Find maximum value in the array
+    for (i = 1; i < n; i++)
+        if (a[i] > max) max = a[i];
+
+    int c[max + 1], b[n];
+
+    // Initialize count array (c) to zero
+    for (i = 0; i <= max; i++)
+        c[i] = 0;
+
+    // Count occurrences of each element
+    for (i = 0; i < n; i++)
+        c[a[i]]++;
+
+    // Calculate cumulative frequency
+    for (i = 1; i <= max; i++)
+        c[i] += c[i - 1];
+
+    // Build the sorted array (b)
+    for (i = n - 1; i >= 0; i--) {
+        b[c[a[i]] - 1] = a[i];
+        c[a[i]]--;
+    }
+
+    // Copy sorted array back to original array
+    for (i = 0; i < n; i++)
+        a[i] = b[i];
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    int a[n];
+
+    for (int i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+
+    countingSort(a, n);
+
+    for (int i = 0; i < n; i++)
+        printf("%d ", a[i]);
+
+    return 0;
+}
