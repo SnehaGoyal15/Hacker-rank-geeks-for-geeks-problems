@@ -1,0 +1,71 @@
+#include <stdio.h>
+
+// Merge function to merge two sorted halves
+void merge(int a[], int left, int mid, int right)
+{
+    int i = left, j = mid + 1, k = 0;
+    int temp[right - left + 1];
+
+    while (i <= mid && j <= right)
+    {
+        if (a[i] <= a[j])
+            temp[k++] = a[i++];
+        else
+            temp[k++] = a[j++];
+    }
+
+    while (i <= mid)
+        temp[k++] = a[i++];
+    
+    while (j <= right)
+        temp[k++] = a[j++];
+
+    for (i = left, k = 0; i <= right; i++, k++)
+        a[i] = temp[k];
+}
+
+// Merge Sort function
+void mergeSort(int a[], int left, int right)
+{
+    if (left < right)
+    {
+        int mid = left + (right - left) / 2;
+        mergeSort(a, left, mid);
+        mergeSort(a, mid + 1, right);
+        merge(a, left, mid, right);
+    }
+}
+
+// Function to find and print unique duplicates
+void findDuplicates(int a[], int n)
+{
+    mergeSort(a, 0, n - 1); // Sort array
+
+    int found = 0;
+    for (int i = 1; i < n; i++)
+    {
+        if (a[i] == a[i - 1])
+        {
+            if (found == 0 || a[i] != a[i - 2]) // Avoid multiple prints
+            {
+                printf("%d ", a[i]);
+                found = 1;
+            }
+        }
+    }
+    if (!found)
+        printf("No duplicates");
+}
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    int a[n];
+
+    for (int i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+
+    findDuplicates(a, n);
+    return 0;
+}
