@@ -1,0 +1,52 @@
+#include <stdio.h>
+
+void swap(char *a, char *b) {
+    char temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void sortAscending(char arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (arr[i] > arr[j]) {
+                swap(&arr[i], &arr[j]);
+            }
+        }
+    }
+}
+
+void caseSpecificSort(char str[]) {
+    int i, len = 0;
+    while (str[len] != '\0') len++;  // Find string length
+
+    char lower[len], upper[len]; 
+    int lowerCount = 0, upperCount = 0;
+
+    // Extract uppercase and lowercase characters
+    for (i = 0; i < len; i++) {
+        if (str[i] >= 'A' && str[i] <= 'Z') upper[upperCount++] = str[i];
+        else if (str[i] >= 'a' && str[i] <= 'z') lower[lowerCount++] = str[i];
+    }
+
+    // Sort both separately
+    sortAscending(upper, upperCount);
+    sortAscending(lower, lowerCount);
+
+    // Reconstruct the sorted string
+    int l = 0, u = 0;
+    for (i = 0; i < len; i++) {
+        if (str[i] >= 'A' && str[i] <= 'Z') str[i] = upper[u++];
+        else if (str[i] >= 'a' && str[i] <= 'z') str[i] = lower[l++];
+    }
+}
+
+int main() {
+    char str[] = "gEeksfOrgEEkS";
+    
+    caseSpecificSort(str);
+
+    printf("%s\n", str);  // Output: eEfggkEkrEOsS
+
+    return 0;
+}
